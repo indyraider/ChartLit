@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* PRD §15.1 Design Tokens — Dark theme is default */
+  --bg-base: #080E1A;
+  --bg-card: #0F172A;
+  --bg-inset: #0B1120;
+  --bg-input: #1E293B;
+  --border-subtle: #1E293B;
+  --border-active: #334155;
+  --text-primary: #F1F5F9;
+  --text-body: #E2E8F0;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+  --accent-canva: #00C4CC;
+  --accent-dev: #10B981;
+  --color-success: #4ADE80;
+  --color-success-bg: #052E16;
+  --color-warning: #FCD34D;
+  --color-warning-bg: #451A03;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg-base: var(--bg-base);
+  --color-bg-card: var(--bg-card);
+  --color-bg-inset: var(--bg-inset);
+  --color-bg-input: var(--bg-input);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-active: var(--border-active);
+  --color-text-primary: var(--text-primary);
+  --color-text-body: var(--text-body);
+  --color-text-muted: var(--text-muted);
+  --color-text-dim: var(--text-dim);
+  --color-accent-canva: var(--accent-canva);
+  --color-accent-dev: var(--accent-dev);
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning: var(--color-warning);
+  --color-warning-bg: var(--color-warning-bg);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-body);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-active);
 }
