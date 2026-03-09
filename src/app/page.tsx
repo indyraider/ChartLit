@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useAppStore } from '@/store';
 import type { TemplateListResponse } from '@/types/template';
 import { PALETTES } from '@/lib/palettes';
+import { ChartRenderer } from '@/components/charts/chart-renderer';
 
 export default function Home() {
   const { gallery, setTemplates, setLoading } = useAppStore();
@@ -101,25 +102,16 @@ export default function Home() {
                   key={template.id}
                   className="group relative mb-6 cursor-pointer break-inside-avoid overflow-hidden rounded-xl border border-border-subtle bg-bg-card transition-all duration-200 hover:-translate-y-1 hover:border-border-active hover:shadow-lg hover:shadow-black/20"
                 >
-                  {/* Chart preview area */}
+                  {/* Chart preview — live rendered via ChartRenderer */}
                   <div
-                    className="flex items-center justify-center bg-bg-inset"
+                    className="overflow-hidden bg-bg-inset"
                     style={{ height: template.height }}
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="flex gap-1">
-                        {paletteColors.slice(0, 4).map((color, i) => (
-                          <div
-                            key={i}
-                            className="h-4 w-4 rounded-full"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs text-text-dim">
-                        {template.chartType}
-                      </span>
-                    </div>
+                    <ChartRenderer
+                      template={template}
+                      width={380}
+                      height={template.height}
+                    />
                   </div>
 
                   {/* Card info */}
