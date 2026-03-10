@@ -201,6 +201,7 @@ export interface CandidateTemplate extends TemplateMetadata {
   reviewStatus: 'pending' | 'approved' | 'revision-requested' | 'rejected';
   reviewerNotes?: string;
   rejectionReason?: string;
+  reviewedAt?: string;
 }
 
 // --- Filter State ---

@@ -25,6 +25,7 @@ export interface WorkspaceChart {
   framework: Framework;
   includeEffects: boolean;
   includeTypes: boolean;
+  neo4jBoilerplate: boolean;
 }
 
 export type SizePreset =
@@ -61,12 +62,26 @@ interface ModalState {
   framework: Framework;
   includeEffects: boolean;
   includeTypes: boolean;
+  neo4jBoilerplate: boolean;
 }
 
 interface WorkspaceState {
   charts: WorkspaceChart[];
   sizes: Record<string, SizePreset>;
   customSizes: Record<string, CustomSize>;
+}
+
+// --- Generation State ---
+
+export type GenerationStatus = 'idle' | 'generating' | 'complete' | 'failed';
+
+interface GenerationState {
+  prompt: string;
+  status: GenerationStatus;
+  jobId: string | null;
+  result: TemplateMetadata | null;
+  error: string | null;
+  suggestion: string | null;
 }
 
 interface CanvaState {
@@ -79,6 +94,7 @@ interface AppState {
   modal: ModalState;
   workspace: WorkspaceState;
   canva: CanvaState;
+  generation: GenerationState;
 
   // Gallery actions
   setTemplates: (templates: TemplateMetadata[], hasMore: boolean) => void;
@@ -99,6 +115,7 @@ interface AppState {
   setModalFramework: (framework: Framework) => void;
   setModalIncludeEffects: (include: boolean) => void;
   setModalIncludeTypes: (include: boolean) => void;
+  setModalNeo4jBoilerplate: (include: boolean) => void;
 
   // Workspace actions
   addToWorkspace: (chart: WorkspaceChart) => void;
@@ -109,6 +126,14 @@ interface AppState {
   // Canva actions
   setCanvaConnected: (connected: boolean) => void;
   setUploadStatus: (chartId: string, status: UploadStatus) => void;
+
+  // Generation actions
+  setGenerationPrompt: (prompt: string) => void;
+  setGenerationStatus: (status: GenerationStatus) => void;
+  setGenerationJobId: (jobId: string | null) => void;
+  setGenerationResult: (result: TemplateMetadata | null) => void;
+  setGenerationError: (error: string | null, suggestion?: string | null) => void;
+  resetGeneration: () => void;
 }
 
 const DEFAULT_FILTERS: GalleryFilters = {
@@ -140,6 +165,7 @@ export const useAppStore = create<AppState>((set) => ({
     framework: 'react',
     includeEffects: true,
     includeTypes: false,
+    neo4jBoilerplate: false,
   },
   workspace: {
     charts: [],
@@ -149,6 +175,14 @@ export const useAppStore = create<AppState>((set) => ({
   canva: {
     connected: false,
     uploadStatus: {},
+  },
+  generation: {
+    prompt: '',
+    status: 'idle',
+    jobId: null,
+    result: null,
+    error: null,
+    suggestion: null,
   },
 
   // --- Gallery Actions ---
@@ -212,6 +246,8 @@ export const useAppStore = create<AppState>((set) => ({
     set((s) => ({ modal: { ...s.modal, includeEffects } })),
   setModalIncludeTypes: (includeTypes) =>
     set((s) => ({ modal: { ...s.modal, includeTypes } })),
+  setModalNeo4jBoilerplate: (neo4jBoilerplate) =>
+    set((s) => ({ modal: { ...s.modal, neo4jBoilerplate } })),
 
   // --- Workspace Actions ---
   addToWorkspace: (chart) =>
@@ -259,5 +295,21 @@ export const useAppStore = create<AppState>((set) => ({
         ...s.canva,
         uploadStatus: { ...s.canva.uploadStatus, [chartId]: status },
       },
+    })),
+
+  // --- Generation Actions ---
+  setGenerationPrompt: (prompt) =>
+    set((s) => ({ generation: { ...s.generation, prompt } })),
+  setGenerationStatus: (status) =>
+    set((s) => ({ generation: { ...s.generation, status } })),
+  setGenerationJobId: (jobId) =>
+    set((s) => ({ generation: { ...s.generation, jobId } })),
+  setGenerationResult: (result) =>
+    set((s) => ({ generation: { ...s.generation, result, status: 'complete' as const } })),
+  setGenerationError: (error, suggestion = null) =>
+    set((s) => ({ generation: { ...s.generation, error, suggestion, status: 'failed' as const } })),
+  resetGeneration: () =>
+    set((s) => ({
+      generation: { prompt: '', status: 'idle', jobId: null, result: null, error: null, suggestion: null },
     })),
 }));

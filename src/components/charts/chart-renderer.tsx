@@ -12,6 +12,7 @@ import { PALETTES } from '@/lib/palettes';
 import { SAMPLE_DATA, GRAPH_SAMPLE_DATA } from '@/lib/sample-data';
 import type { TemplateMetadata, PaletteName } from '@/types/template';
 import { ChartErrorBoundary } from './chart-error-boundary';
+import { EffectWrapper } from '@/components/effects/effect-wrapper';
 
 interface Props {
   template: TemplateMetadata;
@@ -75,7 +76,15 @@ export function ChartRenderer({
   return (
     <ChartErrorBoundary chartType={template.chartType}>
       <Suspense fallback={<ChartSkeleton width={width} height={height} />}>
-        <LazyChart {...rendererProps} />
+        <EffectWrapper
+          effect={template.effect}
+          effectConfig={template.effectConfig}
+          palette={[...paletteColors]}
+          width={width}
+          height={height}
+        >
+          <LazyChart {...rendererProps} />
+        </EffectWrapper>
       </Suspense>
     </ChartErrorBoundary>
   );

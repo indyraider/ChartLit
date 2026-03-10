@@ -1,11 +1,13 @@
 /**
- * Seed templates for development — a small set of templates to test the gallery.
- * These will be replaced by the real template catalog API later.
+ * PRD §17.1 — Template Catalog
+ * Hand-crafted seed templates + programmatically generated matrix.
+ * Total: 300+ templates covering the full type × library × effect matrix.
  */
 
 import type { TemplateMetadata } from '@/types/template';
+import { generateTemplateMatrix } from './template-generator';
 
-export const SEED_TEMPLATES: TemplateMetadata[] = [
+const HAND_CRAFTED_TEMPLATES: TemplateMetadata[] = [
   {
     id: 'bar-recharts-none-01',
     title: 'Clean Revenue Bars',
@@ -270,4 +272,15 @@ export const SEED_TEMPLATES: TemplateMetadata[] = [
     maxNodes: null,
     neo4jBoilerplate: false,
   },
+];
+
+// Merge hand-crafted templates with generated matrix
+// Hand-crafted ones come first and take priority (by ID dedup)
+const generatedTemplates = generateTemplateMatrix({ maxTemplates: 350 });
+const handCraftedIds = new Set(HAND_CRAFTED_TEMPLATES.map((t) => t.id));
+const uniqueGenerated = generatedTemplates.filter((t) => !handCraftedIds.has(t.id));
+
+export const SEED_TEMPLATES: TemplateMetadata[] = [
+  ...HAND_CRAFTED_TEMPLATES,
+  ...uniqueGenerated,
 ];

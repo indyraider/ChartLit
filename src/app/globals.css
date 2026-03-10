@@ -14,6 +14,7 @@
   --text-dim: #64748B;
   --accent-canva: #00C4CC;
   --accent-dev: #10B981;
+  --accent-designer: #A78BFA;
   --color-success: #4ADE80;
   --color-success-bg: #052E16;
   --color-warning: #FCD34D;
@@ -37,6 +38,7 @@
   --color-success-bg: var(--color-success-bg);
   --color-warning: var(--color-warning);
   --color-warning-bg: var(--color-warning-bg);
+  --color-accent-designer: var(--accent-designer);
   --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-jetbrains-mono);
 }
